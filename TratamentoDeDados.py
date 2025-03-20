@@ -7,7 +7,8 @@ for moeda in cotacao['data']:
     lista.append({
         'nome' : moeda['name'],
         'id' : moeda['symbol'],
-        'preços' : moeda['priceUsd'],
+        'preços' : moeda['priceUsd']
     })
     
 df = pd.DataFrame(lista)
+print(cotacao)

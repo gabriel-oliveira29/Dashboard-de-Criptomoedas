@@ -13,28 +13,33 @@ opcoes.append('Todas criptomoedas')
 fig = px.histogram(df, x='id', y='preços', color='id')
 
 # App layout
-app.layout = [
-    html.Div(children='My First App with Data and a Graph'),
-    dcc.Dropdown(opcoes, id='dropdown'),
+app.layout = html.Div ([
+    html.H1(children='Criptomoedas'),
+    dcc.Dropdown(opcoes, value='Todas criptomoedas' , id='dropdown', multi=True),
     dcc.Graph(figure=fig, id='grafico')
-]
+])
 
 @app.callback(
     Output('grafico', 'figure'),
-    Input('dropdown', 'value'),
+    Input('dropdown', 'value')
 
 )
 
 def update_output(value):
-        if value == 'Todas criptomoedas':
-            fig = px.histogram(df, x='id', y='preços', color='id', barmode='group')
-        else:
-            df_filtrado = df.loc[df['nome'] == value]
-            fig = px.histogram(df_filtrado, x='id', y='preços', color='id', barmode='group')
-            print(df_filtrado)
-        return fig
+    if isinstance(value, str):
+        value = [value]
 
+    if 'Todas criptomoedas' in value or not value:  
+        fig = px.histogram(df, x='id', y='preços', color='id')
+        
+    else:
+        df_filtrada = df[df['nome'].isin(value)]
+        fig = px.histogram(df_filtrada, x='id', y='preços', color='id')
+
+    fig.update_layout(yaxis_type="log")
+    return fig
 
 # Run the app
 if __name__ == '__main__':
     app.run(debug=True)
+                
